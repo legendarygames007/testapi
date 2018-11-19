@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Providers;
 
 use App\Http\Requests\ProductRequest;
 use App\Model\Product;
@@ -8,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\Product\ProductResource;
 use App\Http\Resources\Product\ProductCollection;
 use Symfony\Component\HttpFoundation\Response;
+
 class ProductController extends Controller
 {
 
@@ -52,6 +54,7 @@ class ProductController extends Controller
         $product->stock = $request->stock;
         $product->price = $request->price;
         $product->discount = $request->discount;
+        $product->user_id = "3";
         $product->save();
         return response([
           'data' => new ProductResource($product)
@@ -90,6 +93,9 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
+      // $request['detail'] = $request->description;
+      // unset($request['description']);
+
         $product->update($request->all());
         //return $request->all();
         //return $product;
@@ -108,5 +114,14 @@ class ProductController extends Controller
     {
         $product->delete();
         return response(null,204);
+      //return $product;
+    }
+
+    public function productUserCheck($product)
+    {
+      if(Auth::id() != $product->user_id)
+      {
+          throw new ProductNotBelongsToUser;
+      }
     }
 }

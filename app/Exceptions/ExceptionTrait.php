@@ -46,6 +46,7 @@ trait ExceptionTrait
       'errors' => 'Incorrect route'
    ],404);
   }
+  
 }
 
 ?>
