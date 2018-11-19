@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Providers;
+use Auth;
 
+use App\Exceptions\ProductNotBelongsToUser;
 use App\Http\Requests\ProductRequest;
 use App\Model\Product;
 use Illuminate\Http\Request;
@@ -93,6 +94,7 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
+      $this->productUserCheck($product);
       // $request['detail'] = $request->description;
       // unset($request['description']);
 
@@ -112,6 +114,8 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+      $this->productUserCheck($product);
+
         $product->delete();
         return response(null,204);
       //return $product;
